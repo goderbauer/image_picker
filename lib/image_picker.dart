@@ -24,37 +24,23 @@ class PlatformImagePicker implements ImagePicker {
   /// Currently our implementation does not support multiple platform image pickers.
   static PlatformImagePicker instance = new PlatformImagePicker._();
 
-  static const PlatformMethodChannel channel = const PlatformMethodChannel('image_picker');
+  static const PlatformMethodChannel _channel = const PlatformMethodChannel('image_picker');
 
-  final StreamController<ImageProvider> _controller = new StreamController<ImageProvider>(
-    onListen: () {
-      PlatformMessages.setBinaryMessageHandler(channel, _handleImagePicked);
-    },
-    onCancel: () {
-      PlatformMessages.setBinaryMessageHandler(channel, null);
-    }
-  );
-
+  final Stream<ImageProvider> _onImagePicked;
   Stream<ImageProvider> get onImagePicked {
-    if (_controller == null) {
-      _controller = new StreamController<ImageProvider>(
-        onListen: () {
-          PlatformMessages.setBinaryMessageHandler(channel, _handleImagePicked);
-        },
-        onCancel: () {
-          PlatformMessages.setBinaryMessageHandler(channel, null);
-        }
-      );
+    if (_onImagePicked == null) {
+      _onImagePicked = _channel.receiveBroadcastStream().map(_toImageProvider);
     }
-    return _controller.stream;
+    return _onImagePicked;
   }
 
-  void _handleImagePicked() {
-    // TODO(jackson): Implement
-    print("_handleImagePicked called");
-  }
+  ImageProvider _toImageProvider(ByteData data) {
+    print("data received: $data");
+    // TODO (jackson): Implement
+    return new NetworkImage('http://thecatapi.com/api/images/get?format=src&type=gif');
+  };
 
-  void pickImage() => PlatformMessages.invokeMethod(channel, 'pickImage');
+  void pickImage() => _channel.invokeMethod('pickImage');
 }
 
 /// For testing, a mock image picker that provides fake NetworkImage providers
