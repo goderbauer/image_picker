@@ -2,7 +2,7 @@ package com.yourcompany.app;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
-import io.flutter.plugin.LocationPlugin;
+import io.flutter.plugin.ImagePickerPlugin;
 
 public class MainActivity extends FlutterActivity {
     @Override
@@ -12,7 +12,6 @@ public class MainActivity extends FlutterActivity {
     }
 
     private void registerPlugins() {
-        // TODO(jackson): Rename to ImagePickerPlugin
-        LocationPlugin.register(this);
+        ImagePickerPlugin.register(this);
     }
 }

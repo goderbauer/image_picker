@@ -13,18 +13,18 @@ import org.json.JSONObject;
 /**
  * Location Plugin
  */
-public class LocationPlugin implements FlutterView.OnMessageListener {
+public class ImagePickerPlugin implements FlutterView.OnMessageListener {
   private static String TAG = "LocationPlugin";
 
   private FlutterActivity activity;
 
   public static void register(FlutterActivity activity) {
-    new LocationPlugin(activity);
+    new ImagePickerPlugin(activity);
   }
 
-  private LocationPlugin(FlutterActivity activity) {
+  private ImagePickerPlugin(FlutterActivity activity) {
     this.activity = activity;
-    activity.getFlutterView().addOnMessageListener("getLocation", this);
+    activity.getFlutterView().addOnMessageListener("ImagePicker", this);
   }
 
   @Override
