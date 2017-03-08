@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-#import "FlutterGoogleSignIn.h"
+#import "ImagePicker.h"
 
 @implementation FLTImagePicker {
 }
@@ -20,7 +20,7 @@
 - (id)init
 {
     if (self = [super init]) {
-        // Initialize
+        // TODO: Any other initialization work here?
     }
     return self;
 }
@@ -28,7 +28,6 @@
 - (void)didReceiveString:(NSString*)message
                 callback:(void(^)(NSString*))sendResponse
 {
-    [_callbacks insertObject:sendResponse atIndex:0];
     NSString *method;
     NSError *error = nil;
     NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
@@ -37,14 +36,16 @@
         method = [jsonObject objectForKey:@"method"];
     }
     if ([method isEqualToString:@"pickImage"]) {
-        NSLog("Pick image!");
+        // TODO(jackson): Implement
+        NSLog(@"Should now offer to pick image");
     } else {
-        [NSException raise:@"JSON parsing error" format:@"FlutterGoogleSignIn received an unexpected JSON message"];
+        [NSException raise:@"JSON parsing error" format:@"FlutterImagePicker received an unexpected JSON message"];
     }
+    sendResponse(@"{}");
 }
 
 - (NSString *)messageName {
-    return @"GoogleSignIn";
+    return @"ImagePicker";
 }
 
 @end

@@ -1,6 +1,6 @@
-# image_picker
+# image_picker_example
 
-A new flutter project.
+Simple Flutter app demonstrating the image picker.
 
 ## Getting Started
 

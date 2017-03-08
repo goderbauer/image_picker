@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = 'FlutterImagePicker'
   s.version          = '0.0.1'
-  s.summary          = 'Convenience wrapper for picking images in Flutter apps.'
+  s.summary          = 'Utility library for obtaining images in Flutter apps.'
 
   s.description      = <<-DESC
 FlutterImagePicker helps Flutter iOS apps show an image picker.

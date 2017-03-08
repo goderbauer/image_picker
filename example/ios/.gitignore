@@ -29,6 +29,7 @@ xcuserdata
 Icon?
 .tags*
 
+Pods/
 /Flutter/app.flx
 /Flutter/app.dylib
 /Flutter/app.zip
