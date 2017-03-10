@@ -26,7 +26,7 @@ class PlatformImagePicker implements ImagePicker {
 
   static const PlatformMethodChannel _channel = const PlatformMethodChannel('image_picker');
 
-  final Stream<ImageProvider> _onImagePicked;
+  Stream<ImageProvider> _onImagePicked;
   Stream<ImageProvider> get onImagePicked {
     if (_onImagePicked == null) {
       _onImagePicked = _channel.receiveBroadcastStream().map(_toImageProvider);
@@ -34,13 +34,19 @@ class PlatformImagePicker implements ImagePicker {
     return _onImagePicked;
   }
 
-  ImageProvider _toImageProvider(ByteData data) {
+  ImageProvider _toImageProvider(dynamic data) {
     print("data received: $data");
     // TODO (jackson): Implement
     return new NetworkImage('http://thecatapi.com/api/images/get?format=src&type=gif');
   };
 
-  void pickImage() => _channel.invokeMethod('pickImage');
+  Future<ImageProvider> takePhoto() {
+    _channel.invokeMethod('takePhoto');
+  }
+
+  Future<ImageProvider> pickImage() {
+    _channel.invokeMethod('pickImage');
+  }
 }
 
 /// For testing, a mock image picker that provides fake NetworkImage providers
