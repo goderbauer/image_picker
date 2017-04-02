@@ -29,32 +29,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StreamSubscription<ImageProvider> _subscription;
-  MockImagePicker _imagePicker = new MockImagePicker();
-  Image _image;
-  int _counter = 0;
-
-  @override
-  void initState() {
-    _subscription = _imagePicker.onImagePicked.listen((ImageProvider provider) {
-      setState(() {
-        _image = new Image(image: provider);
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-  }
+  String _imageUrl;
 
   void _pickImage() {
-    setState(() {
-      _image = null;
-      _counter++;
-      _imagePicker.url = 'http://thecatapi.com/api/images/get?format=src&type=gif&count=$_counter';
-    });
-    _imagePicker.pickImage();
+    ImagePicker.pickImage().then((String url) {
+      setState(() {
+        _imageUrl = url;
+      });
+    })
   }
 
   @override
@@ -64,7 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text('Image Picker Example'),
       ),
       body: new Center(
-        child: _image ?? new Text('You have not yet picked an image.')
+        child: _imageUrl == null ?
+               new Text('You have not yet picked an image.') :
+               new NetworkImage(_imageUrl),
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _pickImage,
