@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _imageUrl = url;
       });
-    })
+    });
   }
 
   @override
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: new Center(
         child: _imageUrl == null ?
                new Text('You have not yet picked an image.') :
-               new NetworkImage(_imageUrl),
+               new Image.network(_imageUrl),
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _pickImage,
