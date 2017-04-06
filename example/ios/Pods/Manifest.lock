@@ -1,21 +1,3 @@
-PODS:
-  - Flutter (1.0.0)
-  - FlutterImagePicker (0.0.1)
+PODFILE CHECKSUM: fe68fbd35e5bc75c5acdec41319edc0cdaebd038
 
-DEPENDENCIES:
-  - Flutter (from `/Users/jackson/git/flutter/bin/cache/artifacts/engine/ios`)
-  - FlutterImagePicker (from `../..`)
-
-EXTERNAL SOURCES:
-  Flutter:
-    :path: /Users/jackson/git/flutter/bin/cache/artifacts/engine/ios
-  FlutterImagePicker:
-    :path: ../..
-
-SPEC CHECKSUMS:
-  Flutter: d674e78c937094a75ac71dd77e921e840bea3dbf
-  FlutterImagePicker: 193e5dfa5d4a1f886c26e95d30ba869688100a38
-
-PODFILE CHECKSUM: fb391733906f3bfdbe97da9548cf16e9bb36d163
-
-COCOAPODS: 1.2.0
+COCOAPODS: 1.0.1

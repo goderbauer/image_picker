@@ -1,24 +1,22 @@
-package com.yourcompany.app;
+package com.yourcompany.imagepicker.example;
 
 import android.content.Intent;
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
-import io.flutter.plugin.ImagePickerPlugin;
+import io.flutter.plugins.imagepicker.ImagePickerPlugin;
 
 public class MainActivity extends FlutterActivity {
+
+    private ImagePickerPlugin imagePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerPlugins();
+        imagePicker = ImagePickerPlugin.register(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImagePickerPlugin.onActivityResult(this, requestCode, resultCode, data);
-    }
-
-    private void registerPlugins() {
-        ImagePickerPlugin.register(this);
+        imagePicker.onActivityResult(requestCode, resultCode, data);
     }
 }

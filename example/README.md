@@ -1,6 +1,6 @@
 # image_picker_example
 
-Simple Flutter app demonstrating the image picker.
+Demonstrates how to use the image_picker plugin.
 
 ## Getting Started
 

@@ -1,14 +1,16 @@
 #include "AppDelegate.h"
-#include "FlutterImagePicker/ImagePicker.h"
+#include "ImagePickerPlugin.h"
 
 @implementation AppDelegate {
-  FLTImagePicker* _imagePicker;
+  ImagePickerPlugin *_image_picker;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  FlutterViewController* flutterController = (FlutterViewController*)self.window.rootViewController;
-  _imagePicker = [[FLTImagePicker alloc] init];
-  [flutterController addMessageListener:_imagePicker];
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  FlutterViewController *flutterController =
+      (FlutterViewController *)self.window.rootViewController;
+  _image_picker =
+      [[ImagePickerPlugin alloc] initWithFlutterView:flutterController];
   return YES;
 }
 

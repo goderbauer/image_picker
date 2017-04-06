@@ -1,11 +1,11 @@
 name: image_picker_example
-description: A new flutter project.
+description: Demonstrates how to use the image_picker plugin.
 
 dependencies:
   flutter:
     sdk: flutter
   image_picker:
-    path: ..
+    path: ../
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
