@@ -46,9 +46,12 @@
   }
   NSData *data = UIImageJPEGRepresentation(image, 1.0);
   NSString *tmpDirectory = NSTemporaryDirectory();
-  NSString *tmpFile = [tmpDirectory stringByAppendingPathComponent:@"file.jpg"];  // TODO(jackson): Use caches dir with unique filename
-  if ([[NSFileManager defaultManager] createFileAtPath:tmpFile contents:data attributes:nil]) {
-    _result(tmpFile);
+  NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
+  // TODO(jackson): Using the cache directory might be better than temporary directory.
+  NSString *tmpFile = [NSString stringWithFormat:@"image_picker_%@.jpg", guid];
+  NSString *tmpPath = [tmpDirectory stringByAppendingPathComponent:tmpFile];
+  if ([[NSFileManager defaultManager] createFileAtPath:tmpPath contents:data attributes:nil]) {
+    _result(tmpPath);
   } else {
     _result([FlutterError errorWithCode:@"create_error" message:@"Temporary file could not be created" details:nil]);
   }
