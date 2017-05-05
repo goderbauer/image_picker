@@ -8,9 +8,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import io.flutter.app.FlutterActivity;
 import io.flutter.view.FlutterView;
-import io.flutter.plugin.common.FlutterMethodChannel;
-import io.flutter.plugin.common.FlutterMethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.FlutterMethodChannel.Response;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodCall;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ public class ImagePickerPlugin implements MethodCallHandler {
   private static final DefaultCameraModule cameraModule = new DefaultCameraModule();
 
   // Pending method call to obtain an image
-  private Response pendingResponse;
+  private Result pendingResult;
 
   public static ImagePickerPlugin register(FlutterActivity activity) {
     return new ImagePickerPlugin(activity);
@@ -48,16 +48,16 @@ public class ImagePickerPlugin implements MethodCallHandler {
 
   private ImagePickerPlugin(FlutterActivity activity) {
     this.activity = activity;
-    new FlutterMethodChannel(activity.getFlutterView(), CHANNEL).setMethodCallHandler(this);
+    new MethodChannel(activity.getFlutterView(), CHANNEL).setMethodCallHandler(this);
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Response response) {
-    if (pendingResponse != null) {
-      response.error("ALREADY_ACTIVE", "Image picker is already active", null);
+  public void onMethodCall(MethodCall call, Result result) {
+    if (pendingResult != null) {
+      result.error("ALREADY_ACTIVE", "Image picker is already active", null);
       return;
     }
-    pendingResponse = response;
+    pendingResult = result;
     if (call.method.equals("pickImage")) {
       ImagePicker.create(activity)
           .single()
@@ -73,26 +73,26 @@ public class ImagePickerPlugin implements MethodCallHandler {
     if (requestCode == REQUEST_CODE_PICK) {
       if (resultCode == Activity.RESULT_OK && data != null) {
         ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
-        handleResponse(images.get(0));
+        handleResult(images.get(0));
       } else {
-        pendingResponse.error("PICK_ERROR", "Error picking image", null);
-        pendingResponse = null;
+        pendingResult.error("PICK_ERROR", "Error picking image", null);
+        pendingResult = null;
       }
     } else if (requestCode == REQUEST_CODE_CAMERA) {
       if (resultCode == Activity.RESULT_OK && data != null)
         cameraModule.getImage(activity, data, new OnImageReadyListener() {
           @Override
           public void onImageReady(List<Image> images) {
-            handleResponse(images.get(0));
+            handleResult(images.get(0));
           }
         });
     }
   }
 
-  private void handleResponse(Image image) {
-    if (pendingResponse != null) {
-      pendingResponse.success(image.getPath());
-      pendingResponse = null;
+  private void handleResult(Image image) {
+    if (pendingResult != null) {
+      pendingResult.success(image.getPath());
+      pendingResult = null;
     } else {
       throw new IllegalStateException("Received images from picker that were not requested");
     }

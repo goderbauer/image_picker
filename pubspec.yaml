@@ -3,6 +3,8 @@ description: A new flutter plugin project.
 
 flutter:
   plugin:
+    androidPackage: io.flutter.plugins.imagepicker
+    pluginClass: ImagePickerPlugin
 
 dependencies:
   flutter:
