@@ -10,7 +10,7 @@
   FlutterViewController *flutterController =
       (FlutterViewController *)self.window.rootViewController;
   _image_picker =
-      [[ImagePickerPlugin alloc] initWithFlutterView:flutterController];
+      [[ImagePickerPlugin alloc] initWithController:flutterController];
   return YES;
 }
 

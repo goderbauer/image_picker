@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 class ImagePicker {
-  static const PlatformMethodChannel _channel =
-      const PlatformMethodChannel('image_picker');
+  static const MethodChannel _channel =
+      const MethodChannel('image_picker');
 
   // Returns the URL of the picked image
   static Future<File> pickImage() async {
