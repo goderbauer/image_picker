@@ -1,4 +1,4 @@
-package com.yourcompany.imagepicker.example;
+package io.flutter.plugins.image_picker_example;
 
 import android.content.Intent;
 import android.os.Bundle;
