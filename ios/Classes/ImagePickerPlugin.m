@@ -54,6 +54,7 @@
   if (image == nil) {
     image = [info objectForKey:UIImagePickerControllerCropRect];
   }
+  image = [self normalizedImage: image];
   NSData *data = UIImageJPEGRepresentation(image, 1.0);
   NSString *tmpDirectory = NSTemporaryDirectory();
   NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
@@ -71,6 +72,21 @@
                                 details:nil]);
   }
   _result = nil;
+}
+
+// The way we save images to the tmp dir currently throws away all EXIF data
+// (including the orientation of the image). That means, pics taken in portrait
+// will not be orientated correctly as is. To avoid that, we rotate the actual
+// image data.
+// TODO(goderbauer): investigate how to preserve EXIF data.
+- (UIImage *)normalizedImage: (UIImage *)image {
+  if (image.imageOrientation == UIImageOrientationUp) return image;
+
+  UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+  [image drawInRect:(CGRect){0, 0, image.size}];
+  UIImage *normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return normalizedImage;
 }
 
 @end
