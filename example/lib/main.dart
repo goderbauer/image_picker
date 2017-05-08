@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:math';
 
@@ -29,15 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _imageUrl;
-
-  void _pickImage() {
-    ImagePicker.pickImage().then((String url) {
-      setState(() {
-        _imageUrl = url;
-      });
-    });
-  }
+  Future<File> _imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +39,23 @@ class _MyHomePageState extends State<MyHomePage> {
         title: new Text('Image Picker Example'),
       ),
       body: new Center(
-        child: _imageUrl == null ?
-               new Text('You have not yet picked an image.') :
-               new Image.network(_imageUrl),
+        child: new FutureBuilder(
+          future: _imageFile,
+          builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return new Image.file(snapshot.data);
+            } else {
+              return new Text('You have not yet picked an image.');
+            }
+          }
+        )
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _pickImage,
+        onPressed: () {
+          setState(() {
+            _imageFile = ImagePicker.pickImage();
+          });
+        },
         tooltip: 'Pick Image',
         child: new Icon(Icons.add_a_photo),
       ),

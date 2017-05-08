@@ -23,6 +23,7 @@ android {
     }
 
     defaultConfig {
+        applicationId "io.flutter.plugins.image_picker.example"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
