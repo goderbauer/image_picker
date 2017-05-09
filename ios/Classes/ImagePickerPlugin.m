@@ -2,8 +2,7 @@
 
 #import "ImagePickerPlugin.h"
 
-@interface ImagePickerPlugin () <UINavigationControllerDelegate,
-                                 UIImagePickerControllerDelegate>
+@interface ImagePickerPlugin ()<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @end
 
 @implementation ImagePickerPlugin {
@@ -16,30 +15,49 @@
   if (self) {
     _imagePickerController = [[UIImagePickerController alloc] init];
     FlutterMethodChannel *channel =
-        [FlutterMethodChannel methodChannelWithName:@"image_picker"
-                             binaryMessenger:flutterView];
-    [channel
-        setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
-          if (_result) {
-            _result([FlutterError errorWithCode:@"multiple_request"
-                                        message:@"Cancelled by a second request"
-                                        details:nil]);
-            _result = nil;
-          }
-          if ([@"pickImage" isEqualToString:call.method]) {
-            _imagePickerController.modalPresentationStyle =
-                UIModalPresentationCurrentContext;
-            _imagePickerController.sourceType =
-                UIImagePickerControllerSourceTypePhotoLibrary;
-            _imagePickerController.delegate = self;
-            [flutterView presentViewController:_imagePickerController
-                                      animated:YES
-                                    completion:nil];
-            _result = result;
-          } else {
-            result(FlutterMethodNotImplemented);
-          }
-        }];
+        [FlutterMethodChannel methodChannelWithName:@"image_picker" binaryMessenger:flutterView];
+    [channel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
+      if (_result) {
+        _result([FlutterError errorWithCode:@"multiple_request"
+                                    message:@"Cancelled by a second request"
+                                    details:nil]);
+        _result = nil;
+      }
+      if ([@"pickImage" isEqualToString:call.method]) {
+        _imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+        _imagePickerController.delegate = self;
+        _result = result;
+
+        UIAlertController *alert =
+            [UIAlertController alertControllerWithTitle:nil
+                                                message:nil
+                                         preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *camera = [UIAlertAction
+            actionWithTitle:@"Camera"
+                      style:UIAlertActionStyleDefault
+                    handler:^(UIAlertAction *action) {
+                      _imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+                      [flutterView presentViewController:_imagePickerController
+                                                animated:YES
+                                              completion:nil];
+                    }];
+        UIAlertAction *library =
+            [UIAlertAction actionWithTitle:@"Photo Library"
+                                     style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction *action) {
+                                     _imagePickerController.sourceType =
+                                         UIImagePickerControllerSourceTypePhotoLibrary;
+                                     [flutterView presentViewController:_imagePickerController
+                                                               animated:YES
+                                                             completion:nil];
+                                   }];
+        [alert addAction:camera];
+        [alert addAction:library];
+        [flutterView presentViewController:alert animated:YES completion:nil];
+      } else {
+        result(FlutterMethodNotImplemented);
+      }
+    }];
   }
   return self;
 }
@@ -54,7 +72,7 @@
   if (image == nil) {
     image = [info objectForKey:UIImagePickerControllerCropRect];
   }
-  image = [self normalizedImage: image];
+  image = [self normalizedImage:image];
   NSData *data = UIImageJPEGRepresentation(image, 1.0);
   NSString *tmpDirectory = NSTemporaryDirectory();
   NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
@@ -62,9 +80,7 @@
   // directory.
   NSString *tmpFile = [NSString stringWithFormat:@"image_picker_%@.jpg", guid];
   NSString *tmpPath = [tmpDirectory stringByAppendingPathComponent:tmpFile];
-  if ([[NSFileManager defaultManager] createFileAtPath:tmpPath
-                                              contents:data
-                                            attributes:nil]) {
+  if ([[NSFileManager defaultManager] createFileAtPath:tmpPath contents:data attributes:nil]) {
     _result(tmpPath);
   } else {
     _result([FlutterError errorWithCode:@"create_error"
@@ -79,7 +95,7 @@
 // will not be orientated correctly as is. To avoid that, we rotate the actual
 // image data.
 // TODO(goderbauer): investigate how to preserve EXIF data.
-- (UIImage *)normalizedImage: (UIImage *)image {
+- (UIImage *)normalizedImage:(UIImage *)image {
   if (image.imageOrientation == UIImageOrientationUp) return image;
 
   UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
